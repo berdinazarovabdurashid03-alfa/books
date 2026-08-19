@@ -401,6 +401,7 @@ const translations = {
     english:"English",
     business:"Business",
     it:"IT",
+    scientific:"Scientific"
     history:"History",
     fiction:"Fiction",
     popular:"Popular Books",
@@ -423,6 +424,7 @@ const translations = {
     english:"Ingliz tili",
     business:"Biznes",
     it:"IT",
+    scientific:"Ilmiy"
     history:"Tarix",
     fiction:"Badiiy adabiyot",
     popular:"Mashhur kitoblar",
@@ -439,34 +441,57 @@ const translations = {
 
 const books=[
   {
-    title:"English Grammar",
-    cat:"english",
-    meta:"English • PDF"
+    title:"Alice's Adventures in Wonderland",
+    author:"Lewis Carroll",
+    cat:"fiction",
+    meta:"Fiction • Public Domain",
+    cover:"logo.png",
+    pdf:"https://www.gutenberg.org/ebooks/11"
   },
+
+  {
+    title:"English Grammar",
+    author:"Sample Book",
+    cat:"english",
+    meta:"English • PDF",
+    cover:"logo.png",
+    pdf:"#"
+  },
+
   {
     title:"Business Basics",
+    author:"Sample Book",
     cat:"business",
-    meta:"Business • PDF"
+    meta:"Business • PDF",
+    cover:"logo.png",
+    pdf:"#"
   },
+
   {
     title:"Computer Science",
+    author:"Sample Book",
     cat:"it",
-    meta:"IT • PDF"
+    meta:"IT • PDF",
+    cover:"logo.png",
+    pdf:"#"
   },
+
   {
     title:"World History",
+    author:"Sample Book",
     cat:"history",
-    meta:"History • PDF"
+    meta:"History • PDF",
+    cover:"logo.png",
+    pdf:"#"
   },
-  {
-    title:"Classic Fiction",
-    cat:"fiction",
-    meta:"Fiction • PDF"
-  },
+
   {
     title:"Learn English",
+    author:"Sample Book",
     cat:"english",
-    meta:"English • PDF"
+    meta:"English • PDF",
+    cover:"logo.png",
+    pdf:"#"
   }
 ];
 
@@ -535,18 +560,20 @@ function render(){
     <article class="book">
 
       <div class="cover">
-        <img src="logo.png" alt="PDF Books">
+        <img src="${book.cover}" alt="${book.title}">
       </div>
 
       <div class="info">
 
         <h4>${book.title}</h4>
 
+        <p>${book.author}</p>
+
         <p>${book.meta}</p>
 
         <button
           class="btn"
-          onclick="openBook()">
+          onclick="openBook('${book.pdf}')">
           ${t.open}
         </button>
 
@@ -559,12 +586,17 @@ function render(){
   empty.style.display=list.length ? 'none' : 'block';
 }
 
-function openBook(){
+function openBook(url){
+
+  if(url && url !== "#"){
+    window.open(url, "_blank");
+    return;
+  }
 
   alert(
     language === 'en'
-    ? 'The PDF file is not connected yet.'
-    : 'PDF fayli hali ulanmagan.'
+    ? 'This book is not available yet.'
+    : 'Bu kitob hali mavjud emas.'
   );
 
 }
