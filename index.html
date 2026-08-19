@@ -366,7 +366,7 @@ nav b{
 </main>
 
 <nav>
-  <button class="active">
+  <button class="active" onclick="showHome()">
     <b>⌂</b>
     <span data-i18n="home">Home</span>
   </button>
@@ -376,9 +376,9 @@ nav b{
     <span data-i18n="categories">Categories</span>
   </button>
 
-  <button>
-    <b>★</b>
-    <span data-i18n="favorites">Favorites</span>
+  <button onclick="showFavorites()">
+  <b>★</b>
+  <span data-i18n="favorites">Favorites</span>
   </button>
 
   <button onclick="shareSite()">
@@ -410,6 +410,7 @@ const translations = {
     favorites:"Favorites",
     share:"Share",
     open:"Open PDF",
+    favorite:"Favorite",
     pdf:"PDF"
   },
 
@@ -432,6 +433,7 @@ const translations = {
     favorites:"Sevimlilar",
     share:"Ulashish",
     open:"PDF ochish",
+    favorite:"Sevimlilarga qo‘shish",
     pdf:"PDF"
   }
 
@@ -499,13 +501,62 @@ const search=document.querySelector('#search');
 
 let category='all';
 let language=localStorage.getItem('language') || 'en';
+let currentPage='home';
 
+let favorites=JSON.parse(
+  localStorage.getItem('pdfBooksFavorites') || '[]'
+);
 function toggleLanguage(){
   document
     .getElementById('language')
     .classList.toggle('open');
+  }
+  function showFavorites(){
+
+  currentPage='favorites';
+
+  category='all';
+
+  render();
+
+  document
+    .querySelectorAll('nav button')
+    .forEach(button=>button.classList.remove('active'));
+
+  document
+    .querySelectorAll('nav button')[2]
+    .classList.add('active');
 }
 
+function showHome(){
+
+  currentPage='home';
+
+  render();
+
+  document
+    .querySelectorAll('nav button')
+    .forEach(button=>button.classList.remove('active'));
+
+  document
+    .querySelectorAll('nav button')[0]
+    .classList.add('active');
+}
+function toggleFavorite(title){
+
+  if(favorites.includes(title)){
+    favorites=favorites.filter(book=>book!==title);
+  }else{
+    favorites.push(title);
+  }
+
+  localStorage.setItem(
+    'pdfBooksFavorites',
+    JSON.stringify(favorites)
+  );
+
+  render();
+  }
 function setLanguage(lang){
 
   language=lang;
@@ -546,10 +597,14 @@ function render(){
 
   const q=search.value.toLowerCase().trim();
 
-  const list=books.filter(book =>
-    (category==='all' || book.cat===category) &&
-    (!q || book.title.toLowerCase().includes(q))
-  );
+  let list=books.filter(book =>
+  (category==='all' || book.cat===category) &&
+  (!q || book.title.toLowerCase().includes(q))
+);
+
+if(currentPage==='favorites'){
+  list=list.filter(book=>favorites.includes(book.title));
+  }
 
   const t=translations[language];
 
@@ -563,7 +618,8 @@ function render(){
 
       <div class="info">
 
-        <h4>${book.title}</h4>
+        <h4>${book.title}</
+        h4>
 
         <p>${book.author}</p>
 
@@ -574,8 +630,14 @@ function render(){
           onclick="openBook('${book.pdf}')">
           ${t.open}
         </button>
+<button
+  class="favorite-btn"
+  onclick="toggleFavorite('${book.title.replace(/'/g,"\\'")}')">
+  ${favorites.includes(book.title) ? '★' : '☆'}
+  ${t.favorite}
+</button>
 
-      </div>
+     </div>
 
     </article>
 
