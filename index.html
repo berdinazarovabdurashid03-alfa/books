@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0d">
+<title>PDF Books</title>
+<style>
+:root{--bg:#0b0b0d;--card:#151518;--card2:#1d1d21;--red:#e50914;--red2:#ff3340;--text:#fff;--muted:#a6a6ad}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;background:rgba(11,11,13,.94);backdrop-filter:blur(14px);padding:18px 16px 12px;border-bottom:1px solid #242429}
+.brand{display:flex;align-items:center;gap:11px}.brand img{width:42px;height:42px;border-radius:12px;object-fit:cover}.brand h1{font-size:21px;margin:0}.brand small{color:var(--muted)}
+.search{margin-top:16px;display:flex;gap:8px;background:var(--card2);border:1px solid #29292e;border-radius:14px;padding:11px 13px}.search input{width:100%;border:0;outline:0;background:none;color:#fff;font-size:16px}
+main{padding:18px 16px 90px}.hero{background:linear-gradient(135deg,#19191d,#2a0d10);border:1px solid #3a2022;border-radius:20px;padding:20px}.hero h2{margin:0 0 7px;font-size:26px}.hero p{margin:0;color:#c2c2c8}.section{display:flex;justify-content:space-between;align-items:center;margin:24px 0 12px}.section h3{margin:0;font-size:19px}.section span{color:var(--red2);font-size:13px}
+.cats{display:flex;gap:9px;overflow:auto;padding-bottom:3px}.cat{flex:0 0 auto;background:var(--card2);border:1px solid #2a2a30;color:#fff;border-radius:999px;padding:9px 14px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.book{background:var(--card);border:1px solid #26262b;border-radius:16px;overflow:hidden}.cover{height:190px;background:linear-gradient(145deg,#2a2a30,#101012);display:flex;align-items:center;justify-content:center}.cover img{width:100%;height:100%;object-fit:cover}.book .info{padding:11px}.book h4{margin:0 0 5px;font-size:15px}.book p{margin:0;color:var(--muted);font-size:12px}.btn{margin-top:10px;width:100%;border:0;border-radius:10px;padding:9px;background:var(--red);color:#fff;font-weight:700}
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(15,15,18,.96);border-top:1px solid #27272c;display:flex;justify-content:space-around;padding:10px 8px calc(10px + env(safe-area-inset-bottom));z-index:20}nav button{background:none;border:0;color:#aaa;font-size:12px}nav button.active{color:#fff}nav b{display:block;font-size:18px;margin-bottom:2px}
+.empty{color:var(--muted);text-align:center;padding:28px 10px;display:none}
+@media(min-width:700px){main{max-width:900px;margin:auto}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.cover{height:220px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <img src="logo.png" alt="PDF Books">
+    <div><h1>PDF Books</h1><small>Read • Learn • Grow</small></div>
+  </div>
+  <label class="search">🔎 <input id="search" placeholder="Kitob qidirish..." autocomplete="off"></label>
+</header>
+<main>
+  <section class="hero">
+    <h2>Kitoblar olamiga xush kelibsiz 📚</h2>
+    <p>Sevimli kitoblaringizni toping, tanlang va o‘qing.</p>
+  </section>
+
+  <div class="section"><h3>Kategoriyalar</h3><span>Hammasi</span></div>
+  <div class="cats">
+    <button class="cat" data-cat="all">Barchasi</button>
+    <button class="cat" data-cat="english">English</button>
+    <button class="cat" data-cat="business">Business</button>
+    <button class="cat" data-cat="it">IT</button>
+    <button class="cat" data-cat="history">History</button>
+    <button class="cat" data-cat="fiction">Fiction</button>
+  </div>
+
+  <div class="section"><h3>Mashhur kitoblar</h3><span>Ko‘proq</span></div>
+  <div id="grid" class="grid"></div>
+  <div id="empty" class="empty">Kitob topilmadi.</div>
+</main>
+
+<nav>
+  <button class="active"><b>⌂</b>Bosh sahifa</button>
+  <button><b>▦</b>Kategoriyalar</button>
+  <button><b>★</b>Sevimlilar</button>
+  <button><b>↗</b>Ulashish</button>
+</nav>
+
+<script>
+const books=[
+ {title:"English Grammar",cat:"english",meta:"English • PDF"},
+ {title:"Business Basics",cat:"business",meta:"Business • PDF"},
+ {title:"Computer Science",cat:"it",meta:"IT • PDF"},
+ {title:"World History",cat:"history",meta:"History • PDF"},
+ {title:"Classic Fiction",cat:"fiction",meta:"Fiction • PDF"},
+ {title:"Learn English",cat:"english",meta:"English • PDF"}
+];
+const grid=document.querySelector('#grid'), empty=document.querySelector('#empty'), search=document.querySelector('#search');
+let category='all';
+function render(){
+ const q=search.value.toLowerCase().trim();
+ const list=books.filter(b=>(category==='all'||b.cat===category)&&(!q||b.title.toLowerCase().includes(q)));
+ grid.innerHTML=list.map(b=>`<article class="book"><div class="cover"><img src="logo.png" alt=""></div><div class="info"><h4>${b.title}</h4><p>${b.meta}</p><button class="btn" onclick="alert('PDF fayli hali ulanmagan. Keyin bu tugmaga haqiqiy PDF linkini ulaymiz.')">PDF ochish</button></div></article>`).join('');
+ empty.style.display=list.length?'none':'block';
+}
+document.querySelectorAll('.cat').forEach(x=>x.onclick=()=>{category=x.dataset.cat;render()});
+search.oninput=render; render();
+</script>
+</body>
+</html>
