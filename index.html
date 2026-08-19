@@ -378,8 +378,8 @@ nav b{
   </button>
 
   <button onclick="showFavorites()">
-  <b>★</b>
-  <span data-i18n="favorites">Favorites</span>
+    <b>★</b>
+    <span data-i18n="favorites">Favorites</span>
   </button>
 
   <button onclick="shareSite()">
@@ -557,12 +557,24 @@ function showHome(){
 
 function showCategories(){
 
+  currentPage='home';
+
+  category='all';
+
+  render();
+
   document
-    .querySelector('.cats')
-    .scrollIntoView({
-      behavior:'smooth',
-      block:'start'
-    });
+    .querySelectorAll('nav button')
+    .forEach(button=>button.classList.remove('active'));
+
+  document
+    .querySelectorAll('nav button')[1]
+    .classList.add('active');
+
+  window.scrollTo({
+    top: document.querySelector('.cats').offsetTop - 100,
+    behavior:'smooth'
+  });
 
 }
 
