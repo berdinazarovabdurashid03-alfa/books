@@ -267,6 +267,26 @@ nav b{
   margin-bottom:2px
 }
 
+  .category-list{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.category-list button{
+  background:var(--card);
+  border:1px solid #29292e;
+  color:#fff;
+  border-radius:16px;
+  padding:20px 14px;
+  font-size:16px;
+  text-align:left;
+  cursor:pointer;
+}
+
+.category-list button:hover{
+  background:var(--card2);
+}
 .empty{
   color:var(--muted);
   text-align:center;
@@ -352,6 +372,42 @@ nav b{
     <button class="cat" data-cat="history" data-i18n="history">History</button>
     <button class="cat" data-cat="fiction" data-i18n="fiction">Fiction</button>
   </div>
+
+  <section id="categoriesPage" style="display:none;">
+
+    <div class="section">
+      <h3 data-i18n="categories">Categories</h3>
+    </div>
+
+    <div class="category-list">
+
+      <button onclick="openCategory('english')">
+        📚 <span data-i18n="english">English</span>
+      </button>
+
+      <button onclick="openCategory('business')">
+        💼 <span data-i18n="business">Business</span>
+      </button>
+
+      <button onclick="openCategory('science')">
+        🔬 <span data-i18n="science">Science</span>
+      </button>
+
+      <button onclick="openCategory('it')">
+        💻 <span data-i18n="it">IT</span>
+      </button>
+
+      <button onclick="openCategory('history')">
+        📜 <span data-i18n="history">History</span>
+      </button>
+
+      <button onclick="openCategory('fiction')">
+        📖 <span data-i18n="fiction">Fiction</span>
+      </button>
+
+    </div>
+
+  </section>
 
   <div class="section">
     <h3 data-i18n="popular">Popular Books</h3>
@@ -543,6 +599,12 @@ function toggleLanguage(){
 function showHome(){
 
   currentPage='home';
+  category='all';
+
+  document.querySelector('.hero').style.display='block';
+  document.querySelector('.cats').style.display='flex';
+  document.querySelector('#categoriesPage').style.display='none';
+  document.querySelector('#grid').style.display='grid';
 
   render();
 
@@ -553,15 +615,23 @@ function showHome(){
   document
     .querySelectorAll('nav button')[0]
     .classList.add('active');
-}
+
+  window.scrollTo({
+    top:0,
+    behavior:'smooth'
+  });
+
+  }
 
 function showCategories(){
 
-  currentPage='home';
+  currentPage='categories';
 
-  category='all';
-
-  render();
+  document.querySelector('.hero').style.display='none';
+  document.querySelector('.cats').style.display='none';
+  document.querySelector('#categoriesPage').style.display='block';
+  document.querySelector('#grid').style.display='none';
+  document.querySelector('#empty').style.display='none';
 
   document
     .querySelectorAll('nav button')
@@ -571,13 +641,26 @@ function showCategories(){
     .querySelectorAll('nav button')[1]
     .classList.add('active');
 
+                    }
+function openCategory(cat){
+
+  currentPage='home';
+  category=cat;
+
+  document.querySelector('.hero').style.display='block';
+  document.querySelector('.cats').style.display='flex';
+  document.querySelector('#categoriesPage').style.display='none';
+  document.querySelector('#grid').style.display='grid';
+
+  render();
+
   window.scrollTo({
-    top: document.querySelector('.cats').offsetTop - 100,
+    top:0,
     behavior:'smooth'
   });
 
 }
-
+  
 function toggleFavorite(title){
 
   if(favorites.includes(title)){
