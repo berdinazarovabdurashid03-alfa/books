@@ -372,7 +372,7 @@ nav b{
     <span data-i18n="home">Home</span>
   </button>
 
-  <button>
+  <button onclick="showCategories()">
     <b>▦</b>
     <span data-i18n="categories">Categories</span>
   </button>
@@ -542,7 +542,7 @@ function toggleLanguage(){
 
 function showHome(){
 
-  currentPage='home';
+currentPage='home';
 
   render();
 
@@ -553,7 +553,30 @@ function showHome(){
   document
     .querySelectorAll('nav button')[0]
     .classList.add('active');
-}
+}  
+  function showCategories(){
+
+  currentPage='home';
+
+  category='all';
+
+  render();
+
+  document
+    .querySelectorAll('nav button')
+    .forEach(button=>button.classList.remove('active'));
+
+  document
+    .querySelectorAll('nav button')[1]
+    .classList.add('active');
+
+  document
+    .querySelector('.cats')
+    .scrollIntoView({
+      behavior:'smooth',
+      block:'center'
+    });
+  }
 function toggleFavorite(title){
 
   if(favorites.includes(title)){
