@@ -310,6 +310,49 @@ nav b{
   display:none
 }
 
+  .recent-section{
+  margin-top:24px;
+}
+
+.recent-section .section{
+  margin-top:0;
+}
+
+.recent-grid{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding-bottom:4px;
+}
+
+.recent-card{
+  flex:0 0 145px;
+  background:var(--card);
+  border:1px solid #26262b;
+  border-radius:16px;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+.recent-card .cover{
+  height:170px;
+}
+
+.recent-card .info{
+  padding:9px;
+}
+
+.recent-card h4{
+  margin:0 0 4px;
+  font-size:14px;
+}
+
+.recent-card p{
+  margin:0;
+  color:var(--muted);
+  font-size:11px;
+    }
+  
 @media(min-width:700px){
   main{
     max-width:900px;
@@ -436,6 +479,16 @@ nav b{
     No books found.
   </div>
 
+  <section id="recentSection" class="recent-section">
+
+  <div class="section">
+    <h3 data-i18n="recent">Recently Read</h3>
+  </div>
+
+  <div id="recentGrid" class="recent-grid"></div>
+
+  </section>
+  
 </main>
 
 <nav>
@@ -583,6 +636,13 @@ const grid=document.querySelector('#grid');
 const empty=document.querySelector('#empty');
 const search=document.querySelector('#search');
 
+const recentGrid=document.querySelector('#recentGrid');
+const recentSection=document.querySelector('#recentSection');
+
+let recentBooks=JSON.parse(
+  localStorage.getItem('pdfBooksRecent') || '[]'
+);
+  
 let category='all';
 let language=localStorage.getItem('language') || 'en';
 let currentPage='home';
@@ -728,6 +788,41 @@ function setLanguage(lang){
     .classList.remove('open');
 }
 
+function renderRecent(){
+
+  if(!recentBooks.length){
+    recentSection.style.display='none';
+    return;
+  }
+
+  recentSection.style.display='block';
+
+  recentGrid.innerHTML=recentBooks.map(title=>{
+
+    const book=books.find(item=>item.title===title);
+
+    if(!book) return '';
+
+    return `
+      <article class="recent-card"
+        onclick="openBook('${book.pdf}', '${book.title.replace(/'/g,"\\'")}')">
+
+        <div class="cover">
+          <img src="${book.cover}" alt="${book.title}">
+        </div>
+
+        <div class="info">
+          <h4>${book.title}</h4>
+          <p>${book.author}</p>
+        </div>
+
+      </article>
+    `;
+
+  }).join('');
+
+}
+  
 function render(){
 
   const q=search.value.toLowerCase().trim();
@@ -760,10 +855,11 @@ if(currentPage==='favorites'){
         <p>${book.meta}</p>
 
         <button
-          class="btn"
-          onclick="openBook('${book.pdf}')">
-          ${t.open}
-        </button>
+  class="btn"
+  onclick="openBook('${book.pdf}', '${book.title.replace(/'/g,"\\'")}')">
+  ${t.open}
+</button>
+
 <button
   class="favorite-btn"
   onclick="toggleFavorite('${book.title.replace(/'/g,"\\'")}')">
@@ -776,13 +872,28 @@ if(currentPage==='favorites'){
     </article>
 
   `).join('');
+empty.style.display=list.length ? 'none' : 'block';
 
-  empty.style.display=list.length ? 'none' : 'block';
+renderRecent();
+
 }
-
-function openBook(url){
+  
+function openBook(url, title){
 
   if(url && url !== "#"){
+
+    recentBooks = [
+      title,
+      ...recentBooks.filter(book => book !== title)
+    ].slice(0, 6);
+
+    localStorage.setItem(
+      'pdfBooksRecent',
+      JSON.stringify(recentBooks)
+    );
+
+    renderRecent();
+
     window.open(url, "_blank");
     return;
   }
