@@ -317,7 +317,19 @@ nav b{
 .recent-section .section{
   margin-top:0;
 }
+.clear-recent{
+  background:none;
+  border:0;
+  color:var(--red2);
+  font-size:13px;
+  cursor:pointer;
+  padding:5px;
+}
 
+.clear-recent:hover{
+  opacity:.8;
+}
+  
 .recent-grid{
   display:flex;
   gap:12px;
@@ -483,6 +495,10 @@ nav b{
 
   <div class="section">
     <h3 data-i18n="recent">Recently Read</h3>
+
+    <button class="clear-recent" onclick="clearRecent()">
+      🗑️ <span data-i18n="clear">Clear</span>
+    </button>
   </div>
 
   <div id="recentGrid" class="recent-grid"></div>
@@ -522,6 +538,8 @@ const translations = {
     search:"Search books...",
     welcome:"Welcome to the world of books 📚",
     welcomeText:"Find, choose and read your favorite books.",
+    recent:"Recently Read",
+    clear:"Clear",
     categories:"Categories",
     all:"All",
     english:"English",
@@ -546,6 +564,8 @@ const translations = {
     search:"Kitob qidirish...",
     welcome:"Kitoblar olamiga xush kelibsiz 📚",
     welcomeText:"Sevimli kitoblaringizni toping, tanlang va o‘qing.",
+    recent:"Yaqinda o‘qilganlar",
+    clear:"Tozalash",
     categories:"Kategoriyalar",
     all:"Barchasi",
     english:"Ingliz tili",
@@ -820,6 +840,16 @@ function renderRecent(){
     `;
 
   }).join('');
+
+}
+
+function clearRecent(){
+
+  recentBooks=[];
+
+  localStorage.removeItem('pdfBooksRecent');
+
+  renderRecent();
 
 }
   
