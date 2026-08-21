@@ -237,6 +237,22 @@ main{
   font-weight:700
 }
 
+  .favorite-btn{
+  margin-top:8px;
+  width:100%;
+  border:1px solid #33333a;
+  border-radius:10px;
+  padding:9px;
+  background:var(--card2);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.favorite-btn:hover{
+  background:#29292f;
+}
+  
 nav{
   position:fixed;
   bottom:0;
@@ -737,8 +753,7 @@ if(currentPage==='favorites'){
 
       <div class="info">
 
-        <h4>${book.title}</
-        h4>
+        <h4>${book.title}</h4>
 
         <p>${book.author}</p>
 
